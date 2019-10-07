@@ -74,7 +74,7 @@ int main()
 {
     cout<<"Choose a mode:"<<endl;
     cout<<"1)Easy\n2)Hard\n3)Multiplayer"<<endl;
-    int choice;
+    int choice,cnt=0;
     cin>>choice;
     char board[3][3];
     for(int i=0;i<3;i++)
@@ -83,11 +83,10 @@ int main()
     if(choice==1)
     {
         printBoard(board);
-        int cnt=0;
         while(1)
         {
             int r,c;
-            bool invalidFlag=0,winFlag=0;
+            bool winFlag=0;
             cout<<"Your Turn:";
             cin>>r>>c;
             r--;
@@ -95,7 +94,7 @@ int main()
             if(board[r][c]!=' ')
             {
                 cout<<"Invalid move"<<endl;
-                invalidFlag=1;
+                continue;
             }
             else
             {
@@ -111,23 +110,18 @@ int main()
             }
             else
             {
-                if(invalidFlag)
-                    continue;
-                else
+                while(cnt!=9)
                 {
-                    while(cnt!=9)
+                    srand(time(0));
+                    r=rand()%3;
+                    c=rand()%3;
+                    if(board[r][c]==' ')
                     {
-                        srand(time(0));
-                        r=rand()%3;
-                        c=rand()%3;
-                        if(board[r][c]==' ')
-                        {
-                            cout<<"Computer's Turn:"<<endl;
-                            board[r][c]='O';
-                            printBoard(board);
-                            cnt++;
-                            break;
-                        }
+                        cout<<"Computer's Turn:"<<endl;
+                        board[r][c]='O';
+                        printBoard(board);
+                        cnt++;
+                        break;
                     }
                 }
                 if(check(board,r,c))
@@ -142,6 +136,67 @@ int main()
                 }
             }  
         }        
+    }
+    else if(choice==3)
+    {
+        string p1="",p2="";
+        cout<<"Enter Name of Player 1:";
+        cin>>p1;
+        cout<<"Enter Name of Player 2:";
+        cin>>p2;
+        printBoard(board);
+        while (1)
+        {
+            int r,c;
+            bool invalidFlag=0,winFlag=0;
+            /*Player 1*/
+            cout<<p1<<"'s Turn:";
+            cin>>r>>c;
+            r--;
+            c--;
+            if(board[r][c]!=' ')
+            {
+                cout<<"Invalid move"<<endl;
+                continue;
+            }
+            else
+            {
+                cnt++;
+                board[r][c]='X';
+                printBoard(board);
+            }
+            winFlag=check(board,r,c);
+            if(winFlag)
+            {
+                cout<<p1<<" Wins!"<<endl;
+                break;
+            }
+            if(cnt==9)
+                cout<<"Match Draw"<<endl;
+            /*Player 2*/
+            Player2:
+            cout<<p2<<"'s Turn:";
+            cin>>r>>c;
+            r--;
+            c--;
+            if(board[r][c]!=' ')
+            {
+                cout<<"Invalid move"<<endl;
+                goto Player2;
+            }
+            else
+            {
+                cnt++;
+                board[r][c]='O';
+                printBoard(board);
+            }
+            winFlag=check(board,r,c);
+            if(winFlag)
+            {
+                cout<<p2<<" Wins!"<<endl;
+                break;
+            }
+        }
     }
     else
     {
